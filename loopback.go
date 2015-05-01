@@ -76,6 +76,7 @@ func LoopbackRun(cmd *cobra.Command, args []string) {
 func main() {
 	LoopbackCmd.AddCommand(versionCmd)
 	LoopbackCmd.AddCommand(createCmd)
+	LoopbackCmd.AddCommand(mountCmd)
 	LoopbackCmd.AddCommand(listCmd)
 	LoopbackCmd.AddCommand(listImagesCmd)
 	LoopbackCmd.AddCommand(destroyCmd)
