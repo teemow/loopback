@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/user"
 
 	"github.com/spf13/cobra"
 )
@@ -26,6 +27,17 @@ var (
 )
 
 func init() {
+	user, err := user.Current()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Can't find current user. Need to be root.")
+		os.Exit(1)
+	}
+
+	if user.Uid != "0" {
+		fmt.Fprintln(os.Stderr, "Please run loopback as root.")
+		os.Exit(1)
+	}
+
 	LoopbackCmd.PersistentFlags().BoolVarP(&globalFlags.debug, "debug", "d", false, "Print debug output")
 	LoopbackCmd.PersistentFlags().BoolVarP(&globalFlags.verbose, "verbose", "v", false, "Print verbose output")
 }
