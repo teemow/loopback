@@ -33,8 +33,8 @@ func Create(name, path string, gigaBytes int) error {
 	args := []string{
 		"if=/dev/zero",
 		fmt.Sprintf("of=%s", imagePath),
-		"bs=1G",
-		fmt.Sprintf("count=%d", gigaBytes),
+		"bs=1M",
+		fmt.Sprintf("count=%d", gigaBytes*1024),
 	}
 
 	output, err := exec.Command(dd, args...).CombinedOutput()
