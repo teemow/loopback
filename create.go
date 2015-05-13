@@ -25,6 +25,7 @@ Images are created in /var/lib/loopback. Then attached to a loopback, formatted 
 		imagePath string
 		size      int
 		fs        string
+		noMount   bool
 	}
 )
 
@@ -33,6 +34,7 @@ func init() {
 	createCmd.Flags().StringVar(&createFlags.imagePath, "image-path", "/var/lib/loopback", "Path for the loopback images")
 	createCmd.Flags().IntVar(&createFlags.size, "size", 1, "Size of the volume (in gigabytes)")
 	createCmd.Flags().StringVar(&createFlags.fs, "fs", "btrfs", "Filesystem")
+	createCmd.Flags().BoolVar(&createFlags.noMount, "no-mount", false, "Do not mount the created loopback device")
 }
 
 func createRun(cmd *cobra.Command, args []string) {
@@ -68,10 +70,12 @@ func createRun(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	loop.Mount(device, mountPath)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Couldn't mount loopback: %s\n", err)
-		os.Exit(1)
+	if createFlags.noMount == false {
+		loop.Mount(device, mountPath)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Couldn't mount loopback: %s\n", err)
+			os.Exit(1)
+		}
 	}
 
 	os.Exit(0)
