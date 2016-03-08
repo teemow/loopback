@@ -77,6 +77,7 @@ func main() {
 	LoopbackCmd.AddCommand(versionCmd)
 	LoopbackCmd.AddCommand(createCmd)
 	LoopbackCmd.AddCommand(mountCmd)
+	LoopbackCmd.AddCommand(umountCmd)
 	LoopbackCmd.AddCommand(listCmd)
 	LoopbackCmd.AddCommand(listImagesCmd)
 	LoopbackCmd.AddCommand(destroyCmd)
