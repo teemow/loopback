@@ -3,11 +3,17 @@ ORGANIZATION=teemow
 
 SOURCE := $(shell find . -name '*.go')
 VERSION := $(shell cat VERSION)
-GOPATH := $(shell pwd)/.gobuild
 PROJECT_PATH := $(GOPATH)/src/github.com/$(ORGANIZATION)
-TEMPLATES=$(shell find . -name '*.tmpl')
-CONFIGS =$(shell find . -name '*.gpg' -or -name '*.json')
 
+GOPATH := $(shell pwd)/.gobuild
+GOVERSION := 1.6.0
+
+ifndef GOOS
+	GOOS := linux
+endif
+ifndef GOARCH
+	GOARCH := amd64
+endif
 
 .PHONY: all clean run-tests deps bin install
 
@@ -40,7 +46,16 @@ deps: .gobuild
 
 # build
 $(PROJECT): $(SOURCE) VERSION
-	GOPATH=$(GOPATH) go build -ldflags "-X main.projectVersion $(VERSION)" -o $(PROJECT)
+	@echo Building for $(GOOS)/$(GOARCH)
+	docker run \
+	    --rm \
+	    -v $(shell pwd):/usr/code \
+	    -e GOPATH=/usr/code/.gobuild \
+	    -e GOOS=$(GOOS) \
+	    -e GOARCH=$(GOARCH) \
+	    -w /usr/code \
+	    golang:$(GOVERSION) \
+	    go build -a -ldflags "-X main.projectVersion=$(VERSION) -X main.projectBuild=$(COMMIT)" -o $(PROJECT)
 
 install: $(PROJECT)
 	cp $(PROJECT) /usr/local/bin/
