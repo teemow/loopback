@@ -81,6 +81,8 @@ func main() {
 	LoopbackCmd.AddCommand(listCmd)
 	LoopbackCmd.AddCommand(listImagesCmd)
 	LoopbackCmd.AddCommand(destroyCmd)
+	LoopbackCmd.AddCommand(attachCmd)
+	LoopbackCmd.AddCommand(detachCmd)
 
 	LoopbackCmd.Execute()
 }

@@ -57,7 +57,21 @@ func Unmount(device string) error {
 }
 
 func List() (string, error) {
-	return losetup([]string{"-l"})
+	return list(true)
+}
+
+func ListWithoutHeadings() (string, error) {
+	return list(false)
+}
+
+func list(showHeadings bool) (string, error) {
+	args := []string{"--list"}
+
+	if showHeadings == false {
+		args = append(args, "--noheadings")
+	}
+
+	return losetup(args)
 }
 
 func Format(device, fsType string) error {

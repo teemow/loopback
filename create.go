@@ -38,7 +38,10 @@ func init() {
 }
 
 func createRun(cmd *cobra.Command, args []string) {
-	var err error
+	if createFlags.name == "" {
+		fmt.Fprintln(os.Stderr, "Image name parameter missing.")
+		os.Exit(1)
+	}
 
 	if createFlags.mountPath != "" {
 		_, err := os.Stat(createFlags.mountPath)
@@ -48,7 +51,7 @@ func createRun(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	err = image.Create(createFlags.name, createFlags.imagePath, createFlags.size)
+	err := image.Create(createFlags.name, createFlags.imagePath, createFlags.size)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Couldn't create image: %s\n", err)
 		os.Exit(1)
