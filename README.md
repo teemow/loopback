@@ -1,6 +1,6 @@
 # Loopback
 
-[![](https://godoc.org/github.com/teemow/loopback?status.svg)](http://godoc.org/github.com/teemow/loopback) [![IRC Channel](https://img.shields.io/badge/irc-%23giantswarm-blue.svg)](https://kiwiirc.com/client/irc.freenode.net/#giantswarm)
+[![](https://godoc.org/github.com/teemow/loopback?status.svg)](http://godoc.org/github.com/teemow/loopback) [![](https://img.shields.io/docker/pulls/teemow/loopback.svg)](http://hub.docker.com/teemow/loopback) [![IRC Channel](https://img.shields.io/badge/irc-%23giantswarm-blue.svg)](https://kiwiirc.com/client/irc.freenode.net/#giantswarm)
 
 In case you don't have a spare disk or partition but would like to play around with eg btrfs this tool creates a loopback device from a file which you can mount whereever you want.
 
@@ -18,11 +18,10 @@ Clone the latest git repository version from here: https://github.com/teemow/loo
 
 ### How to build
 
-#### Dependencies
+#### Build Dependencies
 
- * `dd`
- * `losetup`
- * `mkfs` (eg for btrfs)
+ * `make`
+ * `docker`
 
 #### Building the standard way
 
@@ -31,6 +30,12 @@ make && sudo make install
 ```
 
 ## Usage
+
+## Dependencies
+
+ * `dd`
+ * `losetup`
+ * `mkfs` (eg for btrfs)
 
 Create a btrfs fs for machined
 
