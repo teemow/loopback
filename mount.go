@@ -22,23 +22,23 @@ Attach an image as a loopback and then mount it.
 	mountFlags struct {
 		name      string
 		imagePath string
+		mountPath string
 	}
 )
 
 func init() {
 	mountCmd.Flags().StringVar(&mountFlags.name, "name", "", "Name of the volume")
 	mountCmd.Flags().StringVar(&mountFlags.imagePath, "image-path", "/var/lib/loopback", "Path for the loopback images")
+	mountCmd.Flags().StringVar(&createFlags.mountPath, "mount-path", "", "Path to mount loopback device into")
 }
 
 func mountRun(cmd *cobra.Command, args []string) {
-	if len(args) < 1 {
+	if mountFlags.mountPath == "" {
 		fmt.Fprintln(os.Stderr, "Mount path parameter missing.")
 		os.Exit(1)
 	}
 
-	mountPath := args[0]
-
-	_, err := os.Stat(mountPath)
+	_, err := os.Stat(mountFlags.mountPath)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Mount path does not exist.")
 		os.Exit(1)
@@ -51,7 +51,7 @@ func mountRun(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	loop.Mount(device, mountPath)
+	loop.Mount(device, mountFlags.mountPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Couldn't mount loopback: %s\n", err)
 		os.Exit(1)
