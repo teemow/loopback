@@ -58,7 +58,7 @@ func createRun(cmd *cobra.Command, args []string) {
 	}
 
 	var device string
-	device, err = loop.Create(createFlags.name, createFlags.imagePath)
+	device, err = loop.Attach(createFlags.name, createFlags.imagePath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Couldn't create loopback: %s\n", err)
 		os.Exit(1)

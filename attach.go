@@ -59,7 +59,7 @@ func attachRun(cmd *cobra.Command, args []string) {
 	}
 
 	var device string
-	device, err = loop.Create(attachFlags.name, attachFlags.imagePath)
+	device, err = loop.Attach(attachFlags.name, attachFlags.imagePath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Couldn't attach loopback: %s\n", err)
 		os.Exit(1)

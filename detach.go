@@ -42,7 +42,7 @@ func detachRun(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	err = loop.Destroy(device)
+	err = loop.Detach(device)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Couldn't destroy loopback: %s\n", err)
 		os.Exit(1)
