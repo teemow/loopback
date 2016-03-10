@@ -1,10 +1,6 @@
 PROJECT=loopback
 ORGANIZATION=teemow
 
-SOURCE := $(shell find . -name '*.go')
-VERSION := $(shell cat VERSION)
-PROJECT_PATH := $(GOPATH)/src/github.com/$(ORGANIZATION)
-
 GOPATH := $(shell pwd)/.gobuild
 GOVERSION := 1.6.0
 
@@ -15,6 +11,10 @@ ifndef GOARCH
 	GOARCH := amd64
 endif
 
+SOURCE := $(shell find . -name '*.go')
+VERSION := $(shell cat VERSION)
+PROJECT_PATH := $(GOPATH)/src/github.com/$(ORGANIZATION)
+
 .PHONY: all clean run-tests deps bin install
 
 all: deps $(PROJECT)
@@ -23,6 +23,7 @@ ci: clean all run-tests
 
 clean:
 	rm -rf $(GOPATH) $(PROJECT)
+	rm $(PROJECT)
 
 run-tests: 
 	GOPATH=$(GOPATH) go test ./...

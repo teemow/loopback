@@ -31,11 +31,53 @@ make && sudo make install
 
 ## Usage
 
+You can create a mounted loopback device with 15G size like this:
+```
+loopback create --fs=ext4 --name=loopback-test size=15
+```
+
+Whenever you are done with working in the device you can unmount it like this:
+```
+loopback umount --name=loopback-test
+```
+
+When you don't need the device and image anymore you can destroy it like this:
+```
+loopback destroy --name=loopback-test
+```
+
+### Using with Docker containers
+
+You can also use loopback in Docker containers:
+```
+docker run \
+    --rm \
+    -it \
+    --privileged \
+    -v /:/host:shared \
+    teemow/loopback \
+    create --fs=ext4 --image-path=/host/var/lib/loopback --name=loopback-test
+```
+
+If you are not yet using Docker 1.10 you can use `nsenter` which is shipped with
+the image:
+```
+docker run \
+    --rm \
+    -it \
+    --privileged \
+    -v /:/host \
+    --entrypoint=/bin/bash \
+    teemow/loopback \
+    -c "/opt/loopback attach --fs=ext4 --image-path=/host/var/lib/loopback --name=loopback-test --create-missing-image && /opt/loopback list --no-headings | grep loopback-test.img | awk '{print \$1}' | xargs -I{} nsenter --mount=/host/proc/1/ns/mnt -- mount {} /mnt"
+```
+
 ## Dependencies
 
  * `dd`
  * `losetup`
  * `mkfs` (eg for btrfs)
+ * `mount`
 
 Create a btrfs fs for machined
 

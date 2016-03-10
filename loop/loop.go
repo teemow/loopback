@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func Create(name, path string) (string, error) {
+func Attach(name, path string) (string, error) {
 	imagePath := fmt.Sprintf("%s/%s.img", path, name)
 
 	_, err := os.Stat(imagePath)
@@ -32,7 +32,7 @@ func Find(name, path string) (string, error) {
 	return trim(device), nil
 }
 
-func Destroy(device string) error {
+func Detach(device string) error {
 	_, err := losetup([]string{"-d", device})
 	if err != nil {
 		return fmt.Errorf("Can't detach device: %s", err)
@@ -57,7 +57,11 @@ func Unmount(device string) error {
 }
 
 func List() (string, error) {
-	return losetup([]string{"-l"})
+	return list(true)
+}
+
+func ListWithoutHeadings() (string, error) {
+	return list(false)
 }
 
 func Format(device, fsType string) error {
@@ -89,6 +93,16 @@ func Mount(device, mountPath string) error {
 	}
 
 	return nil
+}
+
+func list(showHeadings bool) (string, error) {
+	args := []string{"--list"}
+
+	if showHeadings == false {
+		args = append(args, "--noheadings")
+	}
+
+	return losetup(args)
 }
 
 func trim(in string) string {

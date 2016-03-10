@@ -17,11 +17,8 @@ func Create(name, path string, gigaBytes int) error {
 		}
 	}
 
-	imagePath := fmt.Sprintf("%s/%s.img", path, name)
-
-	_, err = os.Stat(imagePath)
-	if err == nil {
-		return fmt.Errorf("image already exists: %s", imagePath)
+	if Exists(name, path) {
+		return fmt.Errorf("image already exists: %s", imagePath(name, path))
 	}
 
 	var dd string
@@ -32,7 +29,7 @@ func Create(name, path string, gigaBytes int) error {
 
 	args := []string{
 		"if=/dev/zero",
-		fmt.Sprintf("of=%s", imagePath),
+		fmt.Sprintf("of=%s", imagePath(name, path)),
 		"bs=1M",
 		fmt.Sprintf("count=%d", gigaBytes*1024),
 	}
@@ -61,12 +58,21 @@ func List(path string) ([]string, error) {
 }
 
 func Destroy(name, path string) error {
-	imagePath := fmt.Sprintf("%s/%s.img", path, name)
-
-	_, err := os.Stat(imagePath)
-	if err != nil {
-		return fmt.Errorf("image doesn't exist: %s", imagePath)
+	if Exists(name, path) {
+		return fmt.Errorf("image doesn't exist: %s", imagePath(name, path))
 	}
 
-	return os.Remove(imagePath)
+	return os.Remove(imagePath(path, name))
+}
+
+func Exists(name, path string) bool {
+	if _, err := os.Stat(imagePath(name, path)); err != nil {
+		return false
+	}
+
+	return true
+}
+
+func imagePath(name, path string) string {
+	return fmt.Sprintf("%s/%s.img", path, name)
 }

@@ -32,6 +32,11 @@ func init() {
 }
 
 func destroyRun(cmd *cobra.Command, args []string) {
+	if destroyFlags.name == "" {
+		fmt.Fprintln(os.Stderr, "Image name parameter missing.")
+		os.Exit(1)
+	}
+
 	device, err := loop.Find(destroyFlags.name, destroyFlags.imagePath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Couldn't find loopback: %s\n", err)
@@ -44,7 +49,7 @@ func destroyRun(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	err = loop.Destroy(device)
+	err = loop.Detach(device)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Couldn't destroy loopback: %s\n", err)
 		os.Exit(1)
