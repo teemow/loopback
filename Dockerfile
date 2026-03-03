@@ -1,4 +1,4 @@
-FROM ubuntu:wily
+FROM ubuntu:noble
 
 COPY loopback /opt/loopback
 
